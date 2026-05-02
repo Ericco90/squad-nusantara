@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQUAD NUSANTARA PAC DUKUHWARU</title>
+    <meta name="description" content="Organisasi masyarakat SQUAD NUSANTARA PAC DUKUHWARU yang berkomitmen menjaga keamanan, ketertiban, dan solidaritas di wilayah Dukuhwaru, Tegal.">
+    
+    <!-- Fonts: Oswald (Maskulin/Tegas) & Inter (Clean) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#0f0f0f',
+                            dark: '#1a1a1a',
+                            red: '#cc0000',
+                            redDark: '#990000',
+                            gold: '#d4af37',
+                            goldDark: '#b5952f'
+                        }
+                    },
+                    fontFamily: {
+                        oswald: ['Oswald', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Styles for extra polish */
+        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #f3f4f6; }
+        h1, h2, h3, h4, .font-oswald { font-family: 'Oswald', sans-serif; }
+        
+        .cta-bg {
+            background: linear-gradient(135deg, #0f0f0f 0%, #4a0000 50%, #0f0f0f 100%);
+        }
+
+        .nav-scrolled {
+            background-color: rgba(15, 15, 15, 0.98) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid #cc0000;
+        }
+
+        /* Image hover zoom */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom-container img { transition: transform 0.5s ease; }
+        .img-zoom-container:hover img { transform: scale(1.1); }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f0f0f; }
+        ::-webkit-scrollbar-thumb { background: #cc0000; }
+        ::-webkit-scrollbar-thumb:hover { background: #990000; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-red selection:text-white">
+
+    <!-- 1. Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-red rounded flex items-center justify-center border border-brand-gold">
+                        <i data-lucide="shield" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span class="font-oswald text-xl font-bold tracking-wider text-white drop-shadow-md">SQUAD <span class="text-brand-red">NUSANTARA</span></span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 drop-shadow-md">
+                    <a href="#beranda" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Beranda</a>
+                    <a href="#tentang" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Tentang</a>
+                    <a href="#kegiatan" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Kegiatan</a>
+                    <a href="#struktur" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Struktur</a>
+                    <a href="#galeri" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Galeri</a>
+                    <a href="#kontak" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Kontak</a>
+                    
+                    <a href="https://wa.me/628995882032" target="_blank" class="bg-brand-red hover:bg-brand-redDark text-white px-6 py-2 rounded font-oswald tracking-wide font-bold transition flex items-center gap-2 border border-transparent hover:border-brand-gold shadow-lg">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> GABUNG SEKARANG
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none drop-shadow-md">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark border-t border-brand-red absolute w-full left-0 mt-4 shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#beranda" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Beranda</a>
+                <a href="#tentang" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Tentang</a>
+                <a href="#kegiatan" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Kegiatan</a>
+                <a href="#struktur" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Struktur</a>
+                <a href="#galeri" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Galeri</a>
+                <a href="#kontak" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Kontak</a>
+                <a href="https://wa.me/628995882032" target="_blank" class="block px-3 py-3 mt-4 text-center text-base font-bold bg-brand-red text-white rounded uppercase">Gabung Sekarang</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. Hero Section (Menggunakan bg-contain agar foto tidak terpotong sama sekali) -->
+    <header id="beranda" class="relative w-full h-[100dvh] md:min-h-screen flex items-end justify-center text-center px-4 pb-16 overflow-hidden bg-black bg-[url('image/bg2.webp')] md:bg-[url('image/bg1.webp')] bg-contain bg-center bg-no-repeat bg-scroll md:bg-fixed">
+        
+        <!-- Dark Overlay Gradient biar CTA bawah dan Navbar atas tetap terlihat, tapi tengah jelas/transparan untuk gambar utama -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/70 pointer-events-none"></div>
+
+        <!-- CTA POJOK KIRI BAWAH -->
+        <div class="absolute bottom-6 left-4 md:bottom-10 md:left-6 z-20 text-left" data-aos="fade-right" data-aos-duration="1000">
+            <!-- label kecil -->
+            <p class="text-xs text-gray-200 mb-2 italic drop-shadow-md tracking-wide">
+                Bersatu • Bergerak • Berbakti
+            </p>
+
+            <a href="https://wa.me/628995882032" 
+               target="_blank"
+               class="inline-flex items-center px-6 py-3 text-sm md:text-lg font-oswald font-bold uppercase tracking-wider text-white rounded-full 
+                      bg-brand-red 
+                      shadow-[0_0_30px_rgba(204,0,0,0.6)] 
+                      hover:scale-105 hover:bg-brand-redDark hover:shadow-[0_0_45px_rgba(204,0,0,0.9)] 
+                      transition duration-300 backdrop-blur-sm border border-transparent hover:border-brand-gold">
+                Gabung Sekarang
+
+                <!-- ICON -->
+                <i data-lucide="message-circle" class="w-5 h-5 ml-2 animate-pulse"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 3. Tentang Kami -->
+    <section id="tentang" class="py-24 bg-brand-black relative border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-1 bg-brand-red"></div>
+                        <h3 class="text-brand-gold font-oswald uppercase tracking-widest font-semibold">Mengenal Kami</h3>
+                    </div>
+                    <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white mb-6 uppercase">Garda Terdepan<br>Keamanan Masyarakat</h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        <strong class="text-white">Squad Nusantara PAC Dukuhwaru</strong> adalah organisasi masyarakat profesional yang berkomitmen penuh menjaga keamanan, ketertiban, dan menjunjung tinggi solidaritas di wilayah Kecamatan Dukuhwaru, Kabupaten Tegal. Kami hadir sebagai mitra strategis aparat dan pengayom masyarakat.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded bg-brand-dark border border-brand-red flex items-center justify-center shrink-0">
+                                <i data-lucide="shield-alert" class="text-brand-red w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Sinergi dengan Aparat</h4>
+                                <p class="text-gray-400 text-sm">Bekerjasama erat dengan TNI/Polri dalam menjaga kondusifitas dan keamanan wilayah secara aktif.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded bg-brand-dark border border-brand-gold flex items-center justify-center shrink-0">
+                                <i data-lucide="crosshair" class="text-brand-gold w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Komitmen Keamanan Wilayah</h4>
+                                <p class="text-gray-400 text-sm">Terlatih dan siaga dalam memberikan pengamanan serta respon cepat terhadap isu ketertiban masyarakat.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded bg-brand-dark border border-gray-600 flex items-center justify-center shrink-0">
+                                <i data-lucide="users" class="text-white w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Solidaritas Anggota</h4>
+                                <p class="text-gray-400 text-sm">Membangun jiwa korsa, persaudaraan yang kuat, dan kepedulian sosial yang tinggi antar anggota & warga.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative" data-aos="fade-left">
+                    <div class="absolute -inset-4 border-2 border-brand-red/30 rounded-lg transform translate-x-4 translate-y-4"></div>
+                    <img src="https://images.unsplash.com/photo-1590424744257-fdb008985172?q=80&w=2070&auto=format&fit=crop" alt="Squad Nusantara Team" class="relative rounded-lg shadow-2xl grayscale hover:grayscale-0 transition duration-500 w-full object-cover h-[500px]">
+                    
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-8 -left-8 bg-brand-dark border border-brand-gold p-6 rounded shadow-xl flex items-center gap-4">
+                        <i data-lucide="award" class="w-12 h-12 text-brand-gold"></i>
+                        <div>
+                            <p class="font-oswald text-3xl font-bold text-white">100%</p>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider">Berdedikasi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Kegiatan / Program -->
+    <section id="kegiatan" class="py-24 bg-brand-dark relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Program Utama</h3>
+                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Aksi & Dedikasi</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
+                        <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Apel Kamtibmas" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="p-8">
+                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Apel Kamtibmas</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Rutin menyelenggarakan apel kesiapsiagaan guna memantapkan kedisiplinan dan koordinasi pengamanan wilayah.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
+                        <img src="https://images.unsplash.com/photo-1574261899182-1e967a996d9a?q=80&w=2074&auto=format&fit=crop" alt="Pengamanan Wilayah" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="p-8">
+                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Pengamanan Wilayah</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Penyisiran dan penjagaan titik rawan secara berkala untuk menekan angka kriminalitas dan gangguan ketertiban.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
+                        <img src="https://images.unsplash.com/photo-1593113565694-c689108b9815?q=80&w=2070&auto=format&fit=crop" alt="Kegiatan Sosial" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="p-8">
+                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Bakti Sosial</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">Turun tangan membantu masyarakat melalui aksi tanggap bencana, gotong royong, dan pembagian bantuan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Struktur Organisasi -->
+    <section id="struktur" class="py-24 bg-brand-black border-t border-b border-gray-900 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiMzMzMiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h3 class="text-brand-gold font-oswald uppercase tracking-widest font-semibold mb-2">Komando & Kepemimpinan</h3>
+                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Struktur Organisasi</h2>
+                <div class="w-24 h-1 bg-brand-red mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Person 1 -->
+                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=2070&auto=format&fit=crop" alt="Ketua" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-brand-red mb-4 grayscale">
+                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Ketua</h4>
+                    <p class="text-brand-gold text-sm font-semibold mt-1 uppercase tracking-widest">Ketua PAC</p>
+                </div>
+                <!-- Person 2 -->
+                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" alt="Wakil Ketua" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
+                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Wakil</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Wakil Ketua</p>
+                </div>
+                <!-- Person 3 -->
+                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" alt="Sekretaris" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
+                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Sekretaris</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Sekretaris</p>
+                </div>
+                <!-- Person 4 -->
+                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" alt="Bendahara" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
+                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Bendahara</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Bendahara</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Galeri -->
+    <section id="galeri" class="py-24 bg-brand-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12" data-aos="fade-up">
+                <div>
+                    <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Dokumentasi</h3>
+                    <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Galeri Kegiatan</h2>
+                </div>
+                <a href="#" class="hidden md:inline-flex items-center gap-2 text-brand-gold hover:text-white transition font-oswald tracking-wide uppercase mt-4 md:mt-0">
+                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[250px]">
+                <div class="img-zoom-container col-span-2 row-span-2 rounded bg-gray-800" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1506484381205-f7945653044d?q=80&w=2070&auto=format&fit=crop" alt="Galeri 1" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                </div>
+                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=2069&auto=format&fit=crop" alt="Galeri 2" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                </div>
+                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=2070&auto=format&fit=crop" alt="Galeri 3" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                </div>
+                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1588661601633-8c4edcecc571?q=80&w=2070&auto=format&fit=crop" alt="Galeri 4" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                </div>
+                <div class="img-zoom-container col-span-2 md:col-span-1 rounded bg-gray-800" data-aos="fade-up" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Galeri 5" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center md:hidden">
+                <a href="#" class="inline-flex items-center gap-2 text-brand-gold hover:text-white transition font-oswald tracking-wide uppercase">
+                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Call To Action (Section Penting) -->
+    <section class="cta-bg py-24 relative overflow-hidden border-y border-brand-red/50">
+        <!-- Abstract overlay -->
+        <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1614088034509-36a5b6b7a549?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center" data-aos="zoom-in">
+            <h2 class="font-oswald text-4xl md:text-6xl font-bold text-white uppercase tracking-wider mb-6 text-shadow-lg">
+                Bersama Kita <span class="text-brand-red">Kuat</span>,<br>
+                Bersinergi Kita <span class="text-brand-gold">Hebat</span>
+            </h2>
+            <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                Jadilah bagian dari penjaga ketertiban masyarakat. Dedikasikan dirimu untuk lingkungan yang lebih aman dan kondusif.
+            </p>
+            <a href="https://wa.me/628995882032" target="_blank" class="inline-flex items-center justify-center gap-3 bg-brand-gold hover:bg-brand-goldDark text-brand-black px-10 py-5 rounded text-xl font-oswald font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.4)] transition duration-300 transform hover:scale-105">
+                <i data-lucide="shield-plus" class="w-6 h-6"></i> Gabung Sekarang
+            </a>
+        </div>
+    </section>
+
+    <!-- 8. Kontak -->
+    <section id="kontak" class="py-24 bg-brand-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div data-aos="fade-right">
+                    <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Markas Komando</h3>
+                    <h2 class="font-oswald text-4xl font-bold text-white uppercase mb-8">Hubungi Kami</h2>
+                    
+                    <p class="text-gray-400 mb-10 leading-relaxed">
+                        Kami terbuka untuk komunikasi, laporan warga, serta koordinasi terkait keamanan wilayah. Jangan ragu untuk mendatangi sekretariat atau menghubungi layanan kami.
+                    </p>
+
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-brand-dark border border-gray-800 rounded flex items-center justify-center shrink-0">
+                                <i data-lucide="map-pin" class="text-brand-red w-7 h-7"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1 uppercase">Alamat Sekretariat</h4>
+                                <p class="text-gray-400">Desa Bulakpacing, Kecamatan Dukuhwaru,<br>Kabupaten Tegal, Jawa Tengah</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-brand-dark border border-gray-800 rounded flex items-center justify-center shrink-0">
+                                <i data-lucide="phone" class="text-brand-gold w-7 h-7"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1 uppercase">Kontak / WhatsApp</h4>
+                                <p class="text-gray-400 text-lg mb-3">0899-5882-032</p>
+                                <a href="https://wa.me/628995882032" target="_blank" class="inline-flex items-center gap-2 text-sm bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded font-semibold transition">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i> Chat WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Maps (Visual Placeholder with CSS if no API key) -->
+                <div class="h-[400px] lg:h-auto rounded-lg overflow-hidden border border-gray-800 bg-gray-900 relative group" data-aos="fade-left">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.3831885444985!2d109.1126!3d-6.9634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNTcnNDguMiJTIDEwOcKwMDYnNDUuNCJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="100%" style="border:0; filter: grayscale(100%) contrast(1.2) opacity(0.8);" allowfullscreen="" loading="lazy"></iframe>
+                    <div class="absolute inset-0 bg-brand-red/10 pointer-events-none group-hover:bg-transparent transition duration-300"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Footer -->
+    <footer class="bg-[#050505] pt-16 pb-8 border-t border-brand-red/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                <!-- Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-brand-red rounded flex items-center justify-center border border-brand-gold">
+                        <i data-lucide="shield" class="text-white w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-oswald text-2xl font-bold tracking-wider text-white leading-none">SQUAD <span class="text-brand-red">NUSANTARA</span></h2>
+                        <span class="text-brand-gold text-xs font-semibold tracking-widest uppercase">PAC Dukuhwaru</span>
+                    </div>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded bg-brand-dark border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-red transition">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded bg-brand-dark border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-red transition">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded bg-brand-dark border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-red transition">
+                        <i data-lucide="youtube" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+                <p>&copy; <span id="year"></span> Squad Nusantara PAC Dukuhwaru. All rights reserved.</p>
+                <p class="font-oswald tracking-widest uppercase text-xs">Sinergi • Keamanan • Solidaritas</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/628995882032" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition transform hover:scale-110 flex items-center justify-center animate-bounce" title="Hubungi via WhatsApp">
+        <i data-lucide="message-circle" class="w-7 h-7"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Initialize Animate On Scroll
+        AOS.init({
+            once: true,
+            offset: 50,
+        });
+
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                navbar.classList.remove('py-2');
+                navbar.classList.add('py-4');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileLinks = menu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
