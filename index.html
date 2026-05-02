@@ -44,23 +44,44 @@
 
     <style>
         /* Custom Styles for extra polish */
-        body { font-family: 'Inter', sans-serif; background-color: #0f0f0f; color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #f3f4f6; }
         h1, h2, h3, h4, .font-oswald { font-family: 'Oswald', sans-serif; }
         
-        .cta-bg {
-            background: linear-gradient(135deg, #0f0f0f 0%, #4a0000 50%, #0f0f0f 100%);
+        /* Premium Textures & Gradients */
+        .bg-premium-grid {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .text-gold-gradient {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
+        .cta-bg {
+            background: linear-gradient(135deg, #050505 0%, #3a0000 50%, #050505 100%);
+        }
+
+        /* Glassmorphism Navbar */
         .nav-scrolled {
-            background-color: rgba(15, 15, 15, 0.98) !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid #cc0000;
+            background-color: rgba(5, 5, 5, 0.75) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid rgba(204, 0, 0, 0.3);
         }
 
         /* Image hover zoom */
         .img-zoom-container { overflow: hidden; }
         .img-zoom-container img { transition: transform 0.5s ease; }
         .img-zoom-container:hover img { transform: scale(1.1); }
+        
+        /* Modal Lightbox transition */
+        #imageModal.active { display: flex; opacity: 1; }
+        #modalImg.active { transform: scale(1); }
+        #modalTextContainer.active { opacity: 1; transform: translateY(0); }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
@@ -69,27 +90,26 @@
         ::-webkit-scrollbar-thumb:hover { background: #990000; }
     </style>
 </head>
-<body class="antialiased selection:bg-brand-red selection:text-white">
+<body class="antialiased selection:bg-brand-red selection:text-white relative">
 
     <!-- 1. Navbar -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-brand-red rounded flex items-center justify-center border border-brand-gold">
-                        <i data-lucide="shield" class="text-white w-6 h-6"></i>
-                    </div>
+                    <img src="image/logo.webp" alt="Logo Squad Nusantara" class="w-10 h-10 object-contain rounded">
                     <span class="font-oswald text-xl font-bold tracking-wider text-white drop-shadow-md">SQUAD <span class="text-brand-red">NUSANTARA</span></span>
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8 drop-shadow-md">
+                <div class="hidden lg:flex items-center space-x-7 drop-shadow-md">
                     <a href="#beranda" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Beranda</a>
                     <a href="#tentang" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Tentang</a>
                     <a href="#kegiatan" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Kegiatan</a>
                     <a href="#struktur" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Struktur</a>
                     <a href="#galeri" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Galeri</a>
+                    <a href="#faq" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">FAQ</a>
                     <a href="#kontak" class="text-sm font-semibold text-gray-300 hover:text-brand-gold uppercase tracking-wide transition">Kontak</a>
                     
                     <a href="https://wa.me/628995882032" target="_blank" class="bg-brand-red hover:bg-brand-redDark text-white px-6 py-2 rounded font-oswald tracking-wide font-bold transition flex items-center gap-2 border border-transparent hover:border-brand-gold shadow-lg">
@@ -98,7 +118,7 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
+                <div class="lg:hidden flex items-center">
                     <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none drop-shadow-md">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
@@ -107,102 +127,91 @@
         </div>
 
         <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark border-t border-brand-red absolute w-full left-0 mt-4 shadow-xl">
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-t border-brand-red absolute w-full left-0 mt-4 shadow-xl">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <a href="#beranda" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Beranda</a>
                 <a href="#tentang" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Tentang</a>
                 <a href="#kegiatan" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Kegiatan</a>
                 <a href="#struktur" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Struktur</a>
                 <a href="#galeri" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Galeri</a>
+                <a href="#faq" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">FAQ</a>
                 <a href="#kontak" class="block px-3 py-2 text-base font-medium text-white hover:text-brand-gold uppercase">Kontak</a>
                 <a href="https://wa.me/628995882032" target="_blank" class="block px-3 py-3 mt-4 text-center text-base font-bold bg-brand-red text-white rounded uppercase">Gabung Sekarang</a>
             </div>
         </div>
     </nav>
 
-    <!-- 2. Hero Section (Menggunakan bg-contain agar foto tidak terpotong sama sekali) -->
+    <!-- 2. Hero Section -->
     <header id="beranda" class="relative w-full h-[100dvh] md:min-h-screen flex items-end justify-center text-center px-4 pb-16 overflow-hidden bg-black bg-[url('image/bg2.webp')] md:bg-[url('image/bg1.webp')] bg-contain bg-center bg-no-repeat bg-scroll md:bg-fixed">
         
-        <!-- Dark Overlay Gradient biar CTA bawah dan Navbar atas tetap terlihat, tapi tengah jelas/transparan untuk gambar utama -->
         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/70 pointer-events-none"></div>
 
-        <!-- CTA POJOK KIRI BAWAH -->
         <div class="absolute bottom-6 left-4 md:bottom-10 md:left-6 z-20 text-left" data-aos="fade-right" data-aos-duration="1000">
-            <!-- label kecil -->
-            <p class="text-xs text-gray-200 mb-2 italic drop-shadow-md tracking-wide">
-                Bersatu • Bergerak • Berbakti
-            </p>
-
-            <a href="https://wa.me/628995882032" 
-               target="_blank"
-               class="inline-flex items-center px-6 py-3 text-sm md:text-lg font-oswald font-bold uppercase tracking-wider text-white rounded-full 
-                      bg-brand-red 
-                      shadow-[0_0_30px_rgba(204,0,0,0.6)] 
-                      hover:scale-105 hover:bg-brand-redDark hover:shadow-[0_0_45px_rgba(204,0,0,0.9)] 
-                      transition duration-300 backdrop-blur-sm border border-transparent hover:border-brand-gold">
+            <p class="text-xs text-gray-200 mb-2 italic drop-shadow-md tracking-wide">Bersatu • Bergerak • Berbakti</p>
+            <a href="https://wa.me/628995882032" target="_blank" class="inline-flex items-center px-6 py-3 text-sm md:text-lg font-oswald font-bold uppercase tracking-wider text-white rounded-full bg-brand-red shadow-[0_0_30px_rgba(204,0,0,0.6)] hover:scale-105 hover:bg-brand-redDark hover:shadow-[0_0_45px_rgba(204,0,0,0.9)] transition duration-300 backdrop-blur-sm border border-transparent hover:border-brand-gold">
                 Gabung Sekarang
-
-                <!-- ICON -->
                 <i data-lucide="message-circle" class="w-5 h-5 ml-2 animate-pulse"></i>
             </a>
         </div>
     </header>
 
     <!-- 3. Tentang Kami -->
-    <section id="tentang" class="py-24 bg-brand-black relative border-t border-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="tentang" class="py-24 bg-[#0a0a0a] bg-premium-grid relative border-t border-gray-900/50 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div data-aos="fade-right">
                     <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-1 bg-brand-red"></div>
-                        <h3 class="text-brand-gold font-oswald uppercase tracking-widest font-semibold">Mengenal Kami</h3>
+                        <div class="w-12 h-1 bg-gradient-to-r from-brand-red to-brand-redDark shadow-[0_0_10px_rgba(204,0,0,0.5)]"></div>
+                        <h3 class="text-gold-gradient font-oswald uppercase tracking-widest font-semibold">Mengenal Kami</h3>
                     </div>
-                    <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white mb-6 uppercase">Garda Terdepan<br>Keamanan Masyarakat</h2>
-                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
-                        <strong class="text-white">Squad Nusantara PAC Dukuhwaru</strong> adalah organisasi masyarakat profesional yang berkomitmen penuh menjaga keamanan, ketertiban, dan menjunjung tinggi solidaritas di wilayah Kecamatan Dukuhwaru, Kabupaten Tegal. Kami hadir sebagai mitra strategis aparat dan pengayom masyarakat.
+                    <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white mb-6 uppercase leading-tight drop-shadow-lg">Garda Terdepan<br>Keamanan Masyarakat</h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed font-light">
+                        <strong class="text-gray-200">Squad Nusantara PAC Dukuhwaru</strong> adalah organisasi masyarakat profesional yang berkomitmen penuh menjaga keamanan, ketertiban, dan menjunjung tinggi solidaritas di wilayah Kecamatan Dukuhwaru, Kabupaten Tegal. Kami hadir sebagai mitra strategis aparat dan pengayom masyarakat.
                     </p>
                     
                     <div class="space-y-6">
-                        <div class="flex gap-4 items-start">
-                            <div class="w-12 h-12 rounded bg-brand-dark border border-brand-red flex items-center justify-center shrink-0">
+                        <div class="flex gap-5 items-start group">
+                            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-gray-900 to-black border border-gray-800 flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-red group-hover:shadow-[0_0_15px_rgba(204,0,0,0.3)] transition duration-300">
                                 <i data-lucide="shield-alert" class="text-brand-red w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Sinergi dengan Aparat</h4>
-                                <p class="text-gray-400 text-sm">Bekerjasama erat dengan TNI/Polri dalam menjaga kondusifitas dan keamanan wilayah secara aktif.</p>
+                                <h4 class="font-oswald text-xl text-gray-200 tracking-wide mb-1 group-hover:text-white transition">Sinergi dengan Aparat</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Bekerjasama erat dengan TNI/Polri dalam menjaga kondusifitas dan keamanan wilayah secara aktif.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 items-start">
-                            <div class="w-12 h-12 rounded bg-brand-dark border border-brand-gold flex items-center justify-center shrink-0">
+                        <div class="flex gap-5 items-start group">
+                            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-gray-900 to-black border border-gray-800 flex items-center justify-center shrink-0 shadow-lg group-hover:border-brand-gold group-hover:shadow-[0_0_15px_rgba(212,175,55,0.2)] transition duration-300">
                                 <i data-lucide="crosshair" class="text-brand-gold w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Komitmen Keamanan Wilayah</h4>
-                                <p class="text-gray-400 text-sm">Terlatih dan siaga dalam memberikan pengamanan serta respon cepat terhadap isu ketertiban masyarakat.</p>
+                                <h4 class="font-oswald text-xl text-gray-200 tracking-wide mb-1 group-hover:text-white transition">Komitmen Keamanan Wilayah</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Terlatih dan siaga dalam memberikan pengamanan serta respon cepat terhadap isu ketertiban masyarakat.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4 items-start">
-                            <div class="w-12 h-12 rounded bg-brand-dark border border-gray-600 flex items-center justify-center shrink-0">
-                                <i data-lucide="users" class="text-white w-6 h-6"></i>
+                        <div class="flex gap-5 items-start group">
+                            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-gray-900 to-black border border-gray-800 flex items-center justify-center shrink-0 shadow-lg group-hover:border-gray-500 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition duration-300">
+                                <i data-lucide="users" class="text-gray-300 w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1">Solidaritas Anggota</h4>
-                                <p class="text-gray-400 text-sm">Membangun jiwa korsa, persaudaraan yang kuat, dan kepedulian sosial yang tinggi antar anggota & warga.</p>
+                                <h4 class="font-oswald text-xl text-gray-200 tracking-wide mb-1 group-hover:text-white transition">Solidaritas Anggota</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Membangun jiwa korsa, persaudaraan yang kuat, dan kepedulian sosial yang tinggi antar anggota & warga.</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="relative" data-aos="fade-left">
-                    <div class="absolute -inset-4 border-2 border-brand-red/30 rounded-lg transform translate-x-4 translate-y-4"></div>
-                    <img src="https://images.unsplash.com/photo-1590424744257-fdb008985172?q=80&w=2070&auto=format&fit=crop" alt="Squad Nusantara Team" class="relative rounded-lg shadow-2xl grayscale hover:grayscale-0 transition duration-500 w-full object-cover h-[500px]">
+                    <div class="absolute -inset-4 border-2 border-brand-red/20 rounded-xl transform translate-x-4 translate-y-4"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10 rounded-xl"></div>
+                    <img src="https://images.unsplash.com/photo-1590424744257-fdb008985172?q=80&w=2070&auto=format&fit=crop" alt="Squad Nusantara Team" class="relative z-0 rounded-xl shadow-2xl grayscale-[50%] hover:grayscale-0 transition duration-700 w-full object-cover h-[550px] border border-gray-800">
                     
-                    <!-- Floating Badge -->
-                    <div class="absolute -bottom-8 -left-8 bg-brand-dark border border-brand-gold p-6 rounded shadow-xl flex items-center gap-4">
-                        <i data-lucide="award" class="w-12 h-12 text-brand-gold"></i>
+                    <div class="absolute -bottom-6 -left-6 z-20 bg-black/80 backdrop-blur-md border border-gray-700 p-6 rounded-xl shadow-[0_15px_30px_rgba(0,0,0,0.8)] flex items-center gap-5 transform hover:-translate-y-2 transition duration-300">
+                        <div class="p-3 bg-gradient-to-br from-brand-gold to-yellow-600 rounded-full shadow-inner">
+                            <i data-lucide="award" class="w-8 h-8 text-black"></i>
+                        </div>
                         <div>
-                            <p class="font-oswald text-3xl font-bold text-white">100%</p>
-                            <p class="text-xs text-gray-400 uppercase tracking-wider">Berdedikasi</p>
+                            <p class="font-oswald text-4xl font-bold text-white drop-shadow-md">100%</p>
+                            <p class="text-xs text-brand-gold uppercase tracking-widest font-semibold">Berdedikasi</p>
                         </div>
                     </div>
                 </div>
@@ -211,47 +220,58 @@
     </section>
 
     <!-- 4. Kegiatan / Program -->
-    <section id="kegiatan" class="py-24 bg-brand-dark relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="kegiatan" class="py-24 bg-[#050505] relative border-t border-gray-900/50">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[300px] bg-brand-red/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
                 <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Program Utama</h3>
-                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Aksi & Dedikasi</h2>
+                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase drop-shadow-lg">Aksi & Dedikasi</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="100">
-                    <div class="h-64 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
-                        <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Apel Kamtibmas" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                <!-- Card 1 (Added data-title & data-description) -->
+                <div class="bg-gradient-to-b from-[#111] to-[#050505] border border-gray-800/60 rounded-xl overflow-hidden group hover:border-brand-red/50 hover:shadow-[0_10px_30px_rgba(204,0,0,0.15)] transition duration-500" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-64 overflow-hidden relative cursor-pointer enlarge-wrapper" data-title="Apel Kamtibmas" data-description="Rutin menyelenggarakan apel kesiapsiagaan guna memantapkan kedisiplinan dan koordinasi pengamanan wilayah di Kecamatan Dukuhwaru. Kegiatan ini diikuti oleh seluruh jajaran anggota aktif.">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Apel Kamtibmas" class="enlarge-img w-full h-full object-cover group-hover:scale-110 transition duration-700 grayscale-[30%] group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                            <i data-lucide="zoom-in" class="text-white w-10 h-10 drop-shadow-lg"></i>
+                        </div>
                     </div>
-                    <div class="p-8">
-                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Apel Kamtibmas</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">Rutin menyelenggarakan apel kesiapsiagaan guna memantapkan kedisiplinan dan koordinasi pengamanan wilayah.</p>
+                    <div class="p-8 relative z-20 pointer-events-none">
+                        <h4 class="font-oswald text-2xl text-gray-100 mb-3 uppercase tracking-wide group-hover:text-gold-gradient transition duration-300">Apel Kamtibmas</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Rutin menyelenggarakan apel kesiapsiagaan guna memantapkan kedisiplinan dan koordinasi pengamanan wilayah.</p>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-64 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
-                        <img src="https://images.unsplash.com/photo-1574261899182-1e967a996d9a?q=80&w=2074&auto=format&fit=crop" alt="Pengamanan Wilayah" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                <div class="bg-gradient-to-b from-[#111] to-[#050505] border border-gray-800/60 rounded-xl overflow-hidden group hover:border-brand-red/50 hover:shadow-[0_10px_30px_rgba(204,0,0,0.15)] transition duration-500" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-64 overflow-hidden relative cursor-pointer enlarge-wrapper" data-title="Pengamanan Wilayah" data-description="Penyisiran dan penjagaan titik rawan secara berkala untuk menekan angka kriminalitas. Kami berkoordinasi langsung dengan kepolisian setempat apabila ditemukan tindakan melanggar hukum.">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1574261899182-1e967a996d9a?q=80&w=2074&auto=format&fit=crop" alt="Pengamanan Wilayah" class="enlarge-img w-full h-full object-cover group-hover:scale-110 transition duration-700 grayscale-[30%] group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                            <i data-lucide="zoom-in" class="text-white w-10 h-10 drop-shadow-lg"></i>
+                        </div>
                     </div>
-                    <div class="p-8">
-                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Pengamanan Wilayah</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">Penyisiran dan penjagaan titik rawan secara berkala untuk menekan angka kriminalitas dan gangguan ketertiban.</p>
+                    <div class="p-8 relative z-20 pointer-events-none">
+                        <h4 class="font-oswald text-2xl text-gray-100 mb-3 uppercase tracking-wide group-hover:text-gold-gradient transition duration-300">Pengamanan Wilayah</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Penyisiran dan penjagaan titik rawan secara berkala untuk menekan angka kriminalitas dan gangguan ketertiban.</p>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="bg-brand-black border border-gray-800 rounded-lg overflow-hidden group hover:border-brand-red transition duration-300" data-aos="fade-up" data-aos-delay="300">
-                    <div class="h-64 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-brand-red/20 z-10 group-hover:bg-transparent transition duration-300"></div>
-                        <img src="https://images.unsplash.com/photo-1593113565694-c689108b9815?q=80&w=2070&auto=format&fit=crop" alt="Kegiatan Sosial" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
+                <div class="bg-gradient-to-b from-[#111] to-[#050505] border border-gray-800/60 rounded-xl overflow-hidden group hover:border-brand-red/50 hover:shadow-[0_10px_30px_rgba(204,0,0,0.15)] transition duration-500" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-64 overflow-hidden relative cursor-pointer enlarge-wrapper" data-title="Bakti Sosial" data-description="Selain menjaga keamanan, anggota Squad Nusantara juga aktif terjun langsung membantu masyarakat melalui aksi tanggap bencana, gotong royong perbaikan jalan, dan pembagian sembako rutin.">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1593113565694-c689108b9815?q=80&w=2070&auto=format&fit=crop" alt="Kegiatan Sosial" class="enlarge-img w-full h-full object-cover group-hover:scale-110 transition duration-700 grayscale-[30%] group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                            <i data-lucide="zoom-in" class="text-white w-10 h-10 drop-shadow-lg"></i>
+                        </div>
                     </div>
-                    <div class="p-8">
-                        <h4 class="font-oswald text-2xl text-white mb-3 uppercase tracking-wide group-hover:text-brand-gold transition">Bakti Sosial</h4>
-                        <p class="text-gray-400 text-sm leading-relaxed">Turun tangan membantu masyarakat melalui aksi tanggap bencana, gotong royong, dan pembagian bantuan.</p>
+                    <div class="p-8 relative z-20 pointer-events-none">
+                        <h4 class="font-oswald text-2xl text-gray-100 mb-3 uppercase tracking-wide group-hover:text-gold-gradient transition duration-300">Bakti Sosial</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">Turun tangan membantu masyarakat melalui aksi tanggap bencana, gotong royong, dan pembagian bantuan.</p>
                     </div>
                 </div>
             </div>
@@ -259,44 +279,56 @@
     </section>
 
     <!-- 5. Struktur Organisasi -->
-    <section id="struktur" class="py-24 bg-brand-black border-t border-b border-gray-900 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiMzMzMiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')]">
+    <section id="struktur" class="py-24 bg-[#0a0a0a] bg-premium-grid border-t border-b border-gray-900/50 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-                <h3 class="text-brand-gold font-oswald uppercase tracking-widest font-semibold mb-2">Komando & Kepemimpinan</h3>
-                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Struktur Organisasi</h2>
-                <div class="w-24 h-1 bg-brand-red mx-auto mt-6"></div>
+            <div class="text-center max-w-3xl mx-auto mb-20" data-aos="fade-up">
+                <h3 class="text-gold-gradient font-oswald uppercase tracking-widest font-semibold mb-2">Komando & Kepemimpinan</h3>
+                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase drop-shadow-lg">Struktur Organisasi</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-brand-red to-transparent mx-auto mt-6"></div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 <!-- Person 1 -->
-                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=2070&auto=format&fit=crop" alt="Ketua" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-brand-red mb-4 grayscale">
-                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Ketua</h4>
-                    <p class="text-brand-gold text-sm font-semibold mt-1 uppercase tracking-widest">Ketua PAC</p>
+                <div class="group text-center hover:-translate-y-3 transition duration-500" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative w-40 h-40 mx-auto mb-6 cursor-pointer enlarge-wrapper" data-title="Nama Ketua PAC" data-description="Bertanggung jawab penuh atas komando dan seluruh kegiatan operasional Squad Nusantara PAC Dukuhwaru.">
+                        <div class="absolute inset-0 rounded-full border-2 border-brand-gold/30 scale-110 group-hover:scale-100 group-hover:border-brand-gold transition duration-500 z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=2070&auto=format&fit=crop" alt="Ketua" class="enlarge-img w-full h-full rounded-full object-cover border-4 border-[#0a0a0a] shadow-xl grayscale-[20%] group-hover:grayscale-0 transition duration-500 relative z-0">
+                    </div>
+                    <h4 class="font-oswald text-xl text-gray-100 uppercase tracking-wide group-hover:text-white transition pointer-events-none">Nama Ketua</h4>
+                    <p class="text-gold-gradient text-sm font-semibold mt-1 uppercase tracking-widest pointer-events-none">Ketua PAC</p>
                 </div>
                 <!-- Person 2 -->
-                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" alt="Wakil Ketua" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
-                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Wakil</h4>
-                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Wakil Ketua</p>
+                <div class="group text-center hover:-translate-y-3 transition duration-500" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative w-40 h-40 mx-auto mb-6 cursor-pointer enlarge-wrapper" data-title="Nama Wakil Ketua" data-description="Mendampingi Ketua PAC dalam menjalankan roda organisasi dan memastikan seluruh komando berjalan dengan baik.">
+                        <div class="absolute inset-0 rounded-full border-2 border-gray-700 scale-110 group-hover:scale-100 group-hover:border-brand-red transition duration-500 z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" alt="Wakil Ketua" class="enlarge-img w-full h-full rounded-full object-cover border-4 border-[#0a0a0a] shadow-xl grayscale-[20%] group-hover:grayscale-0 transition duration-500 relative z-0">
+                    </div>
+                    <h4 class="font-oswald text-xl text-gray-100 uppercase tracking-wide group-hover:text-white transition pointer-events-none">Nama Wakil</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest pointer-events-none">Wakil Ketua</p>
                 </div>
                 <!-- Person 3 -->
-                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="300">
-                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" alt="Sekretaris" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
-                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Sekretaris</h4>
-                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Sekretaris</p>
+                <div class="group text-center hover:-translate-y-3 transition duration-500" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative w-40 h-40 mx-auto mb-6 cursor-pointer enlarge-wrapper" data-title="Nama Sekretaris" data-description="Mengelola administrasi, persuratan, dan dokumentasi resmi organisasi Squad Nusantara PAC Dukuhwaru.">
+                        <div class="absolute inset-0 rounded-full border-2 border-gray-700 scale-110 group-hover:scale-100 group-hover:border-brand-red transition duration-500 z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop" alt="Sekretaris" class="enlarge-img w-full h-full rounded-full object-cover border-4 border-[#0a0a0a] shadow-xl grayscale-[20%] group-hover:grayscale-0 transition duration-500 relative z-0">
+                    </div>
+                    <h4 class="font-oswald text-xl text-gray-100 uppercase tracking-wide group-hover:text-white transition pointer-events-none">Nama Sekretaris</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest pointer-events-none">Sekretaris</p>
                 </div>
                 <!-- Person 4 -->
-                <div class="bg-brand-dark p-6 rounded border border-gray-800 text-center hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="400">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" alt="Bendahara" class="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-600 mb-4 grayscale">
-                    <h4 class="font-oswald text-xl text-white uppercase tracking-wide">Nama Bendahara</h4>
-                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest">Bendahara</p>
+                <div class="group text-center hover:-translate-y-3 transition duration-500" data-aos="fade-up" data-aos-delay="400">
+                    <div class="relative w-40 h-40 mx-auto mb-6 cursor-pointer enlarge-wrapper" data-title="Nama Bendahara" data-description="Bertanggung jawab atas pengelolaan keuangan, iuran anggota, dan anggaran logistik kegiatan sosial/operasional.">
+                        <div class="absolute inset-0 rounded-full border-2 border-gray-700 scale-110 group-hover:scale-100 group-hover:border-brand-red transition duration-500 z-10 pointer-events-none"></div>
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" alt="Bendahara" class="enlarge-img w-full h-full rounded-full object-cover border-4 border-[#0a0a0a] shadow-xl grayscale-[20%] group-hover:grayscale-0 transition duration-500 relative z-0">
+                    </div>
+                    <h4 class="font-oswald text-xl text-gray-100 uppercase tracking-wide group-hover:text-white transition pointer-events-none">Nama Bendahara</h4>
+                    <p class="text-brand-red text-sm font-semibold mt-1 uppercase tracking-widest pointer-events-none">Bendahara</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 6. Galeri -->
+    <!-- 6. Galeri (Grid Rata & Berjejer) -->
     <section id="galeri" class="py-24 bg-brand-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12" data-aos="fade-up">
@@ -304,40 +336,51 @@
                     <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Dokumentasi</h3>
                     <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase">Galeri Kegiatan</h2>
                 </div>
-                <a href="#" class="hidden md:inline-flex items-center gap-2 text-brand-gold hover:text-white transition font-oswald tracking-wide uppercase mt-4 md:mt-0">
-                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[250px]">
-                <div class="img-zoom-container col-span-2 row-span-2 rounded bg-gray-800" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1506484381205-f7945653044d?q=80&w=2070&auto=format&fit=crop" alt="Galeri 1" class="w-full h-full object-cover grayscale hover:grayscale-0">
+            <!-- Grid diubah menjadi proporsional (aspect-square) berjejer rata -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Item 1 -->
+                <div class="img-zoom-container rounded-lg bg-gray-800 aspect-[4/5] relative group cursor-pointer enlarge-wrapper" data-title="Patroli Malam Gabungan" data-description="Dokumentasi anggota saat melakukan patroli keamanan wilayah bersama aparat kepolisian di titik rawan." data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1506484381205-f7945653044d?q=80&w=2070&auto=format&fit=crop" alt="Galeri 1" class="enlarge-img w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <i data-lucide="zoom-in" class="text-white w-8 h-8 drop-shadow-lg"></i>
+                    </div>
                 </div>
-                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=2069&auto=format&fit=crop" alt="Galeri 2" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                <!-- Item 2 -->
+                <div class="img-zoom-container rounded-lg bg-gray-800 aspect-[4/5] relative group cursor-pointer enlarge-wrapper" data-title="Bantuan Logistik Warga" data-description="Pendistribusian bantuan logistik kepada warga yang kurang mampu di sekitar markas komando Squad Nusantara." data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=2069&auto=format&fit=crop" alt="Galeri 2" class="enlarge-img w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <i data-lucide="zoom-in" class="text-white w-8 h-8 drop-shadow-lg"></i>
+                    </div>
                 </div>
-                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="300">
-                    <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=2070&auto=format&fit=crop" alt="Galeri 3" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                <!-- Item 3 -->
+                <div class="img-zoom-container rounded-lg bg-gray-800 aspect-[4/5] relative group cursor-pointer enlarge-wrapper" data-title="Apel Siaga Bencana" data-description="Anggota bersiap-siaga dan berkumpul dalam rangka apel antisipasi musim penghujan dan rawannya bencana banjir." data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=2070&auto=format&fit=crop" alt="Galeri 3" class="enlarge-img w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <i data-lucide="zoom-in" class="text-white w-8 h-8 drop-shadow-lg"></i>
+                    </div>
                 </div>
-                <div class="img-zoom-container rounded bg-gray-800" data-aos="fade-up" data-aos-delay="400">
-                    <img src="https://images.unsplash.com/photo-1588661601633-8c4edcecc571?q=80&w=2070&auto=format&fit=crop" alt="Galeri 4" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                <!-- Item 4 -->
+                <div class="img-zoom-container rounded-lg bg-gray-800 aspect-[4/5] relative group cursor-pointer enlarge-wrapper" data-title="Musyawarah Internal PAC" data-description="Rapat bulanan pengurus dan anggota PAC Dukuhwaru untuk mengevaluasi program kerja dan menjalin silaturahmi." data-aos="zoom-in" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1588661601633-8c4edcecc571?q=80&w=2070&auto=format&fit=crop" alt="Galeri 4" class="enlarge-img w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <i data-lucide="zoom-in" class="text-white w-8 h-8 drop-shadow-lg"></i>
+                    </div>
                 </div>
-                <div class="img-zoom-container col-span-2 md:col-span-1 rounded bg-gray-800" data-aos="fade-up" data-aos-delay="500">
-                    <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Galeri 5" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                <!-- Item 5 -->
+                <div class="img-zoom-container rounded-lg bg-gray-800 aspect-[4/5] relative group cursor-pointer enlarge-wrapper" data-title="Giat Kebersihan Lingkungan" data-description="Aksi bersih-bersih lingkungan desa dan gorong-gorong sebagai wujud nyata kepedulian sosial ormas." data-aos="zoom-in" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1563804825-783305417ab3?q=80&w=2070&auto=format&fit=crop" alt="Galeri 5" class="enlarge-img w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0">
+                    <div class="absolute inset-0 bg-brand-red/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                        <i data-lucide="zoom-in" class="text-white w-8 h-8 drop-shadow-lg"></i>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="mt-8 text-center md:hidden">
-                <a href="#" class="inline-flex items-center gap-2 text-brand-gold hover:text-white transition font-oswald tracking-wide uppercase">
-                    Lihat Semua <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
             </div>
         </div>
     </section>
 
     <!-- 7. Call To Action (Section Penting) -->
     <section class="cta-bg py-24 relative overflow-hidden border-y border-brand-red/50">
-        <!-- Abstract overlay -->
         <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1614088034509-36a5b6b7a549?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
         
         <div class="max-w-4xl mx-auto px-4 relative z-10 text-center" data-aos="zoom-in">
@@ -354,48 +397,131 @@
         </div>
     </section>
 
-    <!-- 8. Kontak -->
-    <section id="kontak" class="py-24 bg-brand-black relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <div data-aos="fade-right">
-                    <h3 class="text-brand-red font-oswald uppercase tracking-widest font-semibold mb-2">Markas Komando</h3>
-                    <h2 class="font-oswald text-4xl font-bold text-white uppercase mb-8">Hubungi Kami</h2>
-                    
-                    <p class="text-gray-400 mb-10 leading-relaxed">
-                        Kami terbuka untuk komunikasi, laporan warga, serta koordinasi terkait keamanan wilayah. Jangan ragu untuk mendatangi sekretariat atau menghubungi layanan kami.
-                    </p>
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-[#0a0a0a] bg-premium-grid relative border-b border-gray-900/50 shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h3 class="text-brand-gold font-oswald uppercase tracking-widest font-semibold mb-2">Informasi</h3>
+                <h2 class="font-oswald text-4xl md:text-5xl font-bold text-white uppercase drop-shadow-lg">Tanya Jawab (FAQ)</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-brand-red to-transparent mx-auto mt-6"></div>
+            </div>
 
-                    <div class="space-y-8">
-                        <div class="flex items-start gap-5">
-                            <div class="w-14 h-14 bg-brand-dark border border-gray-800 rounded flex items-center justify-center shrink-0">
-                                <i data-lucide="map-pin" class="text-brand-red w-7 h-7"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1 uppercase">Alamat Sekretariat</h4>
-                                <p class="text-gray-400">Desa Bulakpacing, Kecamatan Dukuhwaru,<br>Kabupaten Tegal, Jawa Tengah</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-5">
-                            <div class="w-14 h-14 bg-brand-dark border border-gray-800 rounded flex items-center justify-center shrink-0">
-                                <i data-lucide="phone" class="text-brand-gold w-7 h-7"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-oswald text-xl text-white tracking-wide mb-1 uppercase">Kontak / WhatsApp</h4>
-                                <p class="text-gray-400 text-lg mb-3">0899-5882-032</p>
-                                <a href="https://wa.me/628995882032" target="_blank" class="inline-flex items-center gap-2 text-sm bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded font-semibold transition">
-                                    <i data-lucide="message-circle" class="w-4 h-4"></i> Chat WhatsApp
-                                </a>
-                            </div>
-                        </div>
+            <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apa saja syarat bergabung dengan Squad Nusantara?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Syarat utama adalah Warga Negara Indonesia, berdomisili di wilayah Kecamatan Dukuhwaru (atau sekitarnya), berusia minimal 18 tahun, memiliki komitmen tinggi terhadap keamanan lingkungan, dan siap mengikuti pelatihan kedisiplinan organisasi.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Google Maps (Visual Placeholder with CSS if no API key) -->
-                <div class="h-[400px] lg:h-auto rounded-lg overflow-hidden border border-gray-800 bg-gray-900 relative group" data-aos="fade-left">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.3831885444985!2d109.1126!3d-6.9634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNTcnNDguMiJTIDEwOcKwMDYnNDUuNCJF!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="100%" style="border:0; filter: grayscale(100%) contrast(1.2) opacity(0.8);" allowfullscreen="" loading="lazy"></iframe>
-                    <div class="absolute inset-0 bg-brand-red/10 pointer-events-none group-hover:bg-transparent transition duration-300"></div>
+                <!-- FAQ Item 2 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apakah ada iuran wajib bagi anggota?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Sebagai organisasi gotong royong, terdapat iuran kas sukarela yang disepakati bersama oleh anggota dalam rapat bulanan. Dana tersebut murni digunakan untuk kegiatan sosial, logistik penjagaan, dan kas operasional sekretariat.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apakah masyarakat biasa bisa meminta bantuan pengamanan?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Tentu saja. Kami terbuka untuk membantu pengamanan acara hajatan warga, kegiatan keagamaan, maupun kondisi darurat (bencana alam). Silakan hubungi kontak WhatsApp kami atau datang langsung ke markas komando untuk berkoordinasi.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Bagaimana cara mendaftar menjadi anggota baru?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Pendaftaran dapat dilakukan dengan mengisi formulir pendaftaran di Sekretariat PAC Dukuhwaru dengan membawa fotokopi KTP, Pas Foto, dan surat pernyataan kesediaan mematuhi AD/ART organisasi. Anda juga bisa menghubungi nomor WhatsApp kami untuk informasi lebih lanjut.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apakah anggota diwajibkan memiliki seragam?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Ya, setelah lulus masa orientasi dan resmi dilantik, setiap anggota akan mendapatkan seragam resmi (PDH/PDL) dan atribut Squad Nusantara yang wajib dikenakan saat kegiatan resmi, apel, maupun patroli wilayah.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apakah wanita / perempuan bisa bergabung?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Tentu bisa. Squad Nusantara sangat terbuka bagi anggota perempuan (Srikandi) yang ingin berkontribusi. Nantinya, penugasan akan disesuaikan dengan kapasitas dan kebutuhan, terutama di bidang administrasi, sosial, dan kesehatan.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apa saja kegiatan rutin selain pengamanan wilayah?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Selain pengamanan, kami rutin mengadakan bakti sosial (pembagian sembako, donor darah), kerja bakti kebersihan fasilitas umum, serta pelatihan fisik dan mental bagi anggota untuk menjaga soliditas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 8 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Apakah ormas ini berafiliasi dengan partai politik tertentu?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Squad Nusantara adalah organisasi masyarakat independen yang fokus pada kegiatan sosial kemasyarakatan, keamanan, dan ketertiban. Kami menjaga netralitas dan tidak berafiliasi secara langsung dengan partai politik mana pun.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 9 -->
+                <div class="faq-item border border-gray-800 rounded-lg bg-black/50 overflow-hidden cursor-pointer hover:border-gray-600 transition duration-300">
+                    <div class="faq-header flex justify-between items-center p-6 text-white font-oswald text-xl tracking-wide select-none">
+                        <span>Bagaimana jika terjadi kondisi darurat di desa saya?</span>
+                        <i data-lucide="chevron-down" class="text-brand-red transition-transform duration-300 faq-icon w-6 h-6"></i>
+                    </div>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 bg-[#080808]">
+                        <p class="p-6 pt-0 text-gray-400 text-base leading-relaxed">
+                            Jika terjadi kondisi darurat (bencana, kerusuhan, tindak kriminal), segera laporkan ke WhatsApp markas komando kami. Tim reaksi cepat kami akan segera meluncur ke lokasi sembari berkoordinasi dengan pihak kepolisian atau aparat terkait.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -407,9 +533,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
                 <!-- Brand -->
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-brand-red rounded flex items-center justify-center border border-brand-gold">
-                        <i data-lucide="shield" class="text-white w-7 h-7"></i>
-                    </div>
+                    <img src="image/logo.webp" alt="Logo Squad Nusantara" class="w-12 h-12 object-contain rounded">
                     <div>
                         <h2 class="font-oswald text-2xl font-bold tracking-wider text-white leading-none">SQUAD <span class="text-brand-red">NUSANTARA</span></h2>
                         <span class="text-brand-gold text-xs font-semibold tracking-widest uppercase">PAC Dukuhwaru</span>
@@ -438,9 +562,27 @@
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/628995882032" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition transform hover:scale-110 flex items-center justify-center animate-bounce" title="Hubungi via WhatsApp">
+    <a href="https://wa.me/628995882032" target="_blank" class="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition transform hover:scale-110 flex items-center justify-center animate-bounce" title="Hubungi via WhatsApp">
         <i data-lucide="message-circle" class="w-7 h-7"></i>
     </a>
+
+    <!-- MODAL LIGHTBOX WITH ARTICLE TEXT -->
+    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-sm items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <button id="closeModal" class="absolute top-6 right-6 lg:top-10 lg:right-10 text-gray-400 hover:text-brand-red transition transform hover:rotate-90 duration-300 z-50 focus:outline-none">
+            <i data-lucide="x" class="w-10 h-10"></i>
+        </button>
+        
+        <div class="flex flex-col items-center w-full max-w-4xl max-h-[95vh] overflow-hidden">
+            <!-- Modal Image -->
+            <img id="modalImg" src="" class="max-w-full max-h-[60vh] md:max-h-[70vh] rounded-t-lg shadow-[0_0_50px_rgba(204,0,0,0.2)] scale-95 transition-transform duration-300 object-contain">
+            
+            <!-- Modal Article Text -->
+            <div id="modalTextContainer" class="w-full bg-[#111] p-6 lg:p-8 rounded-b-lg border-t-2 border-brand-red flex-col items-center text-center hidden opacity-0 transition-opacity duration-300 transform translate-y-4 shadow-xl overflow-y-auto max-h-[30vh]">
+                <h3 id="modalTitle" class="font-oswald text-2xl lg:text-3xl text-gold-gradient uppercase tracking-wide mb-3"></h3>
+                <p id="modalDesc" class="text-gray-300 text-sm lg:text-base leading-relaxed max-w-3xl"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -462,12 +604,12 @@
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 navbar.classList.add('nav-scrolled');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-2');
+                navbar.classList.remove('py-6');
+                navbar.classList.add('py-3');
             } else {
                 navbar.classList.remove('nav-scrolled');
-                navbar.classList.remove('py-2');
-                navbar.classList.add('py-4');
+                navbar.classList.remove('py-3');
+                navbar.classList.add('py-6');
             }
         });
 
@@ -486,6 +628,98 @@
                 menu.classList.add('hidden');
             });
         });
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const header = item.querySelector('.faq-header');
+            const content = item.querySelector('.faq-content');
+            const icon = item.querySelector('.faq-icon');
+
+            header.addEventListener('click', () => {
+                const isOpen = content.style.maxHeight;
+
+                // Tutup FAQ yang lain (Optional)
+                document.querySelectorAll('.faq-content').forEach(c => c.style.maxHeight = null);
+                document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // --- UPDATED: Lightbox Modal Logic with Article Text ---
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalTextContainer = document.getElementById('modalTextContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const closeBtn = document.getElementById('closeModal');
+        const enlargeWrappers = document.querySelectorAll('.enlarge-wrapper');
+
+        // Buka Modal
+        enlargeWrappers.forEach(wrapper => {
+            wrapper.addEventListener('click', function() {
+                const imgTarget = this.querySelector('.enlarge-img');
+                const title = this.getAttribute('data-title');
+                const desc = this.getAttribute('data-description');
+
+                if (imgTarget) {
+                    // Set Gambar
+                    modalImg.src = imgTarget.src;
+                    
+                    // Set Teks dan visibilitas container teks
+                    if (title || desc) {
+                        modalTitle.textContent = title || '';
+                        modalDesc.textContent = desc || '';
+                        modalTextContainer.classList.remove('hidden');
+                        modalTextContainer.classList.add('flex');
+                    } else {
+                        modalTextContainer.classList.add('hidden');
+                        modalTextContainer.classList.remove('flex');
+                    }
+                    
+                    // Tampilkan blok modal utama
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    
+                    // Animasi masuk
+                    setTimeout(() => {
+                        modal.classList.add('active');
+                        modalImg.classList.add('active');
+                        if (title || desc) modalTextContainer.classList.add('active');
+                    }, 10);
+                }
+            });
+        });
+
+        // Tutup Modal Function
+        const closeModalFn = () => {
+            modal.classList.remove('active');
+            modalImg.classList.remove('active');
+            modalTextContainer.classList.remove('active');
+            
+            // Sembunyikan elemen setelah durasi animasi selesai
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modalImg.src = '';
+                modalTitle.textContent = '';
+                modalDesc.textContent = '';
+            }, 300);
+        };
+
+        // Event Listener Tutup Modal
+        closeBtn.addEventListener('click', closeModalFn);
+        modal.addEventListener('click', (e) => {
+            // Menutup modal jika area hitam di luar gambar dan teks diklik
+            if (e.target === modal || e.target.parentElement === modal) {
+                closeModalFn();
+            }
+        });
+
     </script>
 </body>
 </html>
